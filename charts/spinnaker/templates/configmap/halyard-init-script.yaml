@@ -15,10 +15,10 @@ data:
       echo "INFO: $secret is present"
       GIT_USER=`echo $GIT_USER | sed 's/ *$//g'`
       GIT_TOKEN=`echo $GIT_TOKEN | sed 's/ *$//g'`
-      git -c {{ .Values.halyard.gitops.repo.configArgs }} clone $GIT_CLONE_PARAM -b {{ .Values.halyard.gitops.repo.halConfigBranch }} /tmp/spinnaker/test 2>/tmp/tmp.log
+      git -c {{ .Values.halyard.gitops.repo.configArgs }} clone $GIT_CLONE_PARAM -b $HAL_CONFIG_BRANCH /tmp/spinnaker/test 2>/tmp/tmp.log
       if [[ $? != 0 ]]; then
          echo "ERROR: Failed while trying to execute:"
-         echo "git -c http.sslVerify=false clone $GIT_CLONE_PARAM -b {{ .Values.halyard.gitops.repo.halConfigBranch }} /tmp/spinnaker/test" | sed s/$GIT_TOKEN/\<TOKEN_REDACTED\>/g
+         echo "git -c http.sslVerify=false clone $GIT_CLONE_PARAM -b $HAL_CONFIG_BRANCH /tmp/spinnaker/test" | sed s/$GIT_TOKEN/\<TOKEN_REDACTED\>/g
          sed s/$GIT_TOKEN/\<TOKEN_REDACTED\>/g /tmp/tmp.log
          echo "####"
          echo "Correct baseUrlHostName, organization, username, token and repository in values.yaml and re-execute 'helm upgrade --install ....' command"
@@ -31,14 +31,14 @@ data:
       echo "Please create a secret"
       exit 4
     fi
-    cp -r /tmp/spinnaker/test// /tmp/spinnaker/.hal
+    cp -r /tmp/spinnaker/test/$HAL_CONFIG_PATH/ /tmp/spinnaker/.hal
     rm -rf /tmp/spinnaker/test
     printf 'server.address: 0.0.0.0\n' > /tmp/config/halyard-local.yml
     if [ -f /tmp/spinnaker/.hal/halyard.yaml ]; then
     cp /tmp/spinnaker/.hal/halyard.yaml /tmp/config
     fi
     sed -i s/SPINNAKER_NAMESPACE/${SPINNAKER_NAMESPACE}/ /tmp/spinnaker/.hal/config
-    echo "Halyard is configured with Gitrepo"
+    echo "Halyard is configured with Gitrepo $HAL_CONFIG_PATH"
 
     {{- else }}
     # Override Halyard daemon's listen address

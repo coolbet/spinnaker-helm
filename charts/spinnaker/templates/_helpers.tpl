@@ -22,6 +22,7 @@ Common labels for metadata.
 app: {{ include "spinnaker.fullname" . | quote }}
 heritage: {{ .Release.Service | quote }}
 release: {{ .Release.Name | quote }}
+owner_team: tooling
 {{- end -}}
 {{- define "spinnaker.standard-labels" -}}
 {{ include "spinnaker.standard-labels-base" . }}
