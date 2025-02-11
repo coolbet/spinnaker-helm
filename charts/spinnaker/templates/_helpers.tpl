@@ -22,7 +22,8 @@ Common labels for metadata.
 app: {{ include "spinnaker.fullname" . | quote }}
 heritage: {{ .Release.Service | quote }}
 release: {{ .Release.Name | quote }}
-owner_team: tooling
+owner_team: "tooling"
+app.kubernetes.io/name: "halyard"
 {{- end -}}
 {{- define "spinnaker.standard-labels" -}}
 {{ include "spinnaker.standard-labels-base" . }}
